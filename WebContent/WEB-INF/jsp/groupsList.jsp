@@ -23,8 +23,8 @@
 			    <li>
 			    	<p><c:out value="${pr.firstName}" /> <c:out value="${pr.lastName}" /></p>
 			    	<ul>   			      
-				        <li><c:out value="${pr.web}" /></li>
-				        <li><c:out value="${pr.password}" /></li>
+				        <li>web: <c:out value="${pr.web}" /></li>
+				        <li>password: <c:out value="${pr.password}" /></li>
 			        </ul>
 			    </li>
 			</c:forEach>
