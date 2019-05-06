@@ -1,11 +1,16 @@
 package springapp.web;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,21 +26,30 @@ public class PersonController {
 
     @Autowired
     IPersonManager manager;
+    
+    @Autowired
+    PersonValidator validator;
 
     protected final Log logger = LogFactory.getLog(getClass());
 
     @ModelAttribute("groups")
     Collection<Group> groups() {
-        logger.info("Making list of products");
+        logger.info("Making list of groups");
         return manager.findAllGroups();
+    }
+    
+    @ModelAttribute("persons")
+    Collection<Person> persons() {
+        logger.info("Making list of persons");
+        return manager.findAllPersons();
     }
     
     @ModelAttribute
     public Person newPerson(
-            @RequestParam(value = "id", required = false) Integer productNumber) {
-        if (productNumber != null) {
-            logger.info("find product " + productNumber);
-            return manager.findPerson(productNumber);
+            @RequestParam(value = "id", required = false) Integer personNumber) {
+        if (personNumber != null) {
+            logger.info("find person " + personNumber);
+            return manager.findPerson(personNumber);
         }
         Person p = new Person();
         p.setId(0);
@@ -44,7 +58,8 @@ public class PersonController {
         p.setMail("");
         p.setBirthDay(null);
         p.setPassword("");
-        logger.info("new product = " + p);
+        p.setGroupId(0);
+        logger.info("new person = " + p);
         return p;
     }
     
@@ -55,8 +70,28 @@ public class PersonController {
     }
     
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editGroup(@ModelAttribute Group g) {
-        return "groupForm";
+    public String editPerson(@ModelAttribute Group g) {
+        return "personForm";
     }
 
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String saveProduct(@ModelAttribute @Valid Person p, BindingResult result) {
+    	validator.validate(p, result);
+        if (result.hasErrors()) {
+            return "personForm";
+        }
+        manager.savePerson(p);
+        return "redirect:list";
+    }
+    
+    @ModelAttribute("groupTypes")
+    public Map<Integer, String> groupTypes() {
+        Map<Integer, String> types = new LinkedHashMap<>();
+        types.put(1, "ILD");
+        types.put(2, "FSI");
+        types.put(3, "GIG");
+        types.put(4, "IAAA");
+        return types;
+    }
+    
 }

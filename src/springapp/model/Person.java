@@ -2,16 +2,50 @@ package springapp.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.URL;
+
 public class Person {
 
 	private int id;
+	
+	@NotNull
+    @Size(min = 1, message = "Le prénom est obligatoire")
     private String firstName;
+	
+	@NotNull
+    @Size(min = 1, message = "Le nom est obligatoire")
     private String lastName;
+    
+	@NotNull
+    @Email(message = "Adresse mail non valide")
     private String mail;
+    
+	@NotNull
+    @URL(message = "Adresse web non valide")
     private String web;
+    
+	@NotNull
     private Date BirthDay;
+    
+	@NotNull
+    @Size(min = 8, message = "8 caractères minimum")
     private String password;
     
+	@NotNull
+	@Min(value = 1, message = "L'id du groupe doit etre plus grand que 1")
+    private int groupId;
+    
+	public int getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
 	public int getId() {
 		return id;
 	}

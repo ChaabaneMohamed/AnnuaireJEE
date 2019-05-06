@@ -10,8 +10,11 @@ public interface IPersonManager {
 	// récupérer les groupes
 	Collection<Group> findAllGroups();
 
-	// récupérer les personnes
-	Collection<Person> findAllPersons(long groupId);
+	// récupérer les personnes d'un groupe
+	Collection<Person> findAllPersons();
+	
+	// récupérer les personnes d'un groupe
+	Collection<Person> findAllPersonsInGroup(long groupId);
 
 	// lire une personne
 	Person findPerson(long id);
@@ -21,5 +24,7 @@ public interface IPersonManager {
 
 	// modification ou ajout d'une nouvelle personne
 	void saveGroup(Group g);
+
+	Group findGroup(int id);
 
 }
